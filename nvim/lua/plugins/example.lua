@@ -2,7 +2,8 @@
 -- stylua: ignore
 --
 if true then return {
-  "echasnovski/mini.surround",
+  {
+    "echasnovski/mini.surround",
     optional = true,
     opts = {
       mappings = {
@@ -18,34 +19,10 @@ if true then return {
     keys = {
       { "gz", "", desc = "+surround" },
     },
-    {
-    "vague2k/vague.nvim",
-    config = function()
-      require("vague").setup({
-        -- optional configuration here
-      }) end
-    },
-  {"EdenEast/nightfox.nvim"},
-  {"doums/darcula"},
-  {"aliqyan-21/darkvoid.nvim"},
-  {
-    'AlexvZyl/nordic.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-        require('nordic').load()
-    end
-},
---   {
---     'bettervim/yugen.nvim',
---     config = function()
---         vim.cmd.colorscheme('darcula')
---     end,
--- },
-
+  },
 } end
+
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
---
 -- In your plugin files, you can:
 -- * add extra plugins
 -- * disable/enabled LazyVim plugins
