@@ -15,7 +15,7 @@ config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 11.0
 
 config.window_decorations = "RESIZE"
-config.window_background_opacity = 0.95
+config.window_background_opacity = 0.90
 config.use_dead_keys = false
 config.inactive_pane_hsb = { saturation = 0.8, brightness = 0.7 }
 
