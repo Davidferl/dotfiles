@@ -16,6 +16,7 @@ return {
   {
     "aliqyan-21/darkvoid.nvim",
   },
+  { "arcticicestudio/nord-vim", name = "nord" },
   {
     "AlexvZyl/nordic.nvim",
     lazy = false,

@@ -33,7 +33,11 @@ config.keys = {
 	{ key = "l", mods = mod.SUPER, action = act.ActivateTabRelative(1) },
 	{ key = "[", mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
 	{ key = "]", mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
-
+	{
+		key = "t",
+		mods = "SHIFT|ALT",
+		action = act.SpawnTab("CurrentPaneDomain"),
+	},
 	-- panes --
 	-- panes: split panes
 	{
