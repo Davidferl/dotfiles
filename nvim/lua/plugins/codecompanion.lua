@@ -35,15 +35,14 @@ return {
 
   keys = {
     { "<C-a>", "<cmd>CodeCompanionActions<cr>" },
-    { "<leader>a", "", desc = "+ai" },
     {
-      "<leader>at",
+      "<leader>a",
       "<cmd>CodeCompanionChat Toggle<cr>",
       mode = "n",
       desc = "Toggle AI Chat",
     },
     {
-      "<leader>aa",
+      "<leader>a",
       "<cmd>CodeCompanionChat Add<cr>",
       mode = "v",
       desc = "Add Selection to AI Chat",
