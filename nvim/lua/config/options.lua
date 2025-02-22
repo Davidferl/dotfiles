@@ -4,3 +4,4 @@
 
 vim.opt.shell = "/usr/bin/fish"
 vim.opt.textwidth = 120
+vim.opt.laststatus = 3

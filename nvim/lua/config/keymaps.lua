@@ -26,3 +26,16 @@ if copilot_exists then
     end,
   }):map("<leader>ut")
 end
+
+vim.keymap.set("n", "<c-/>", function()
+  Snacks.terminal(nil, {
+    cwd = LazyVim.root(),
+    win = {
+      position = "bottom",
+      height = 0.25,
+    },
+  })
+end, { desc = "Terminal (Root Dir)" })
+
+-- Expand 'cc' into 'CodeCompanion' in the command line
+vim.cmd([[cab cc CodeCompanion]])
