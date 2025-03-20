@@ -17,4 +17,7 @@ if not contains $_asdf_shims $PATH
     set -gx --prepend PATH $_asdf_shims
 end
 set --erase _asdf_shims
-. ~/.asdf/plugins/java/set-java-home.fish
+
+if test -f ~/.asdf/plugins/java/set-java-home.fish
+    source ~/.asdf/plugins/java/set-java-home.fish
+end
