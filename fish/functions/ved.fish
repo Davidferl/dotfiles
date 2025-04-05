@@ -1,0 +1,3 @@
+function ved
+    deactivate
+end
