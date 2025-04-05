@@ -9,9 +9,9 @@ wezterm.on("gui-startup", function()
 	window:gui_window():maximize()
 end)
 
-config.default_prog = { "/usr/bin/fish", "-l" }
+-- config.default_prog = { "/usr/bin/fish", "-l" }
 
-config.font = wezterm.font("JetBrainsMono Nerd Font")
+-- config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 11.0
 
 config.window_decorations = "RESIZE"
