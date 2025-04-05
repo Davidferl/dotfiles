@@ -5,7 +5,7 @@
 if vim.fn.has("mac") == 1 then
   vim.opt.shell = "/opt/homebrew/bin/fish" -- Homebrew installation path on macOS
 else
-  vim.opt.shell = "/usr/bin/fish"
+  vim.opt.shell = "/usr/bin/fish -l"
 end
 vim.g.lazyvim_prettier_needs_config = false
 vim.opt.textwidth = 120
