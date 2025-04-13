@@ -1,7 +1,3 @@
-if true then
-  return {}
-end
-
 return {
   "olimorris/codecompanion.nvim",
   config = true,
@@ -10,17 +6,6 @@ return {
     "nvim-treesitter/nvim-treesitter",
   },
   opts = {
-    adapters = {
-      anthropic = function()
-        return require("codecompanion.adapters").extend("anthropic", {
-          schema = {
-            model = {
-              default = "claude-3-5-sonnet-20241022",
-            },
-          },
-        })
-      end,
-    },
     display = {
       chat = {
         window = {
