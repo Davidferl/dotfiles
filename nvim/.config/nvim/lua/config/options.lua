@@ -10,3 +10,4 @@ end
 vim.g.lazyvim_prettier_needs_config = false
 vim.opt.textwidth = 120
 vim.opt.laststatus = 3
+vim.opt.termguicolors = true
