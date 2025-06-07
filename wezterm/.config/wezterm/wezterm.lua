@@ -13,11 +13,12 @@ local shell_path = "/usr/bin/fish"
 
 if wezterm.target_triple:find("darwin") then
 	shell_path = "/opt/homebrew/bin/fish"
+else
+	config.font = wezterm.font("JetBrainsMono Nerd Font")
 end
 
 config.default_prog = { shell_path, "-l" }
 
--- config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = 11.0
 
 config.window_decorations = "RESIZE"
