@@ -1,24 +1,25 @@
 "$schema" = 'https://starship.rs/config.schema.json'
 
 format = """
-$java\
-$python\
-$dart\
+$os\
+$time\
+$battery\
+$jobs\
 $git_branch\
 $git_state\
 $git_commit\
 $git_status\
 $gcloud\
 $fill\
+$java\
+$python\
+$dart\
 $cmd_duration\ 
-$jobs\
-$time\
-$battery\
-$os\
 $line_break\
 $directory\
 $shell\
-$character"""
+$character
+"""
 
 [python]
 symbol = " "
@@ -49,7 +50,7 @@ style = "purple"
 tag_symbol = '  '
 
 [git_state]
-format = '[\($state( $progress_current of $progress_total)\)]($style) '
+format = '[\($state( $progress_current of $progress_total)\)]($style)'
 
 [fill]
 symbol = " "
@@ -78,12 +79,12 @@ discharging_symbol = '󰁹 '
 [time]
 disabled = false
 style = "bold white"
-format = "[$time ]($style)"
+format = "[$time]($style) "
 time_format = "%R"
 
 [os]
 disabled = false
-format = "[$symbol ]($style)"
+format = "[$symbol]($style)"
 
 [directory]
 read_only = " 󰌾"
