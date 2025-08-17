@@ -11,30 +11,45 @@ $git_commit\
 $git_status\
 $gcloud\
 $fill\
-$java\
-$python\
-$dart\
 $cmd_duration\ 
+$dart\
+$golang\
+$java\
+$lua\
+$nodejs\
+$python\
+$rust\
 $line_break\
+$sudo\
 $directory\
 $shell\
 $character
 """
 
-[python]
-symbol = " "
-version_format = "$major.$minor "
-format = '[$symbol$version(\($virtualenv\) )]($style)'
+[dart]
+symbol = " "
+version_format = "$major.$minor"
+format = "[$symbol$version]($style)"
 
 [java]
 symbol = " "
 version_format = "$major"
-format = "[$symbol$version ]($style)"
+format = "[$symbol$version]($style)"
 
-[dart]
-symbol = " "
+[lua]
+symbol = " "
 version_format = "$major.$minor"
-format = "[$symbol$version ]($style)"
+format = "[$symbol$version]($style)"
+
+[nodejs]
+symbol = " "
+version_format = "$major.$minor"
+format = "[$symbol$version]($style)"
+
+[python]
+symbol = " "
+version_format = "$major.$minor"
+format = '[$symbol$version(\($virtualenv\))]($style)'
 
 [gcloud]
 disabled = true
@@ -50,7 +65,7 @@ style = "purple"
 tag_symbol = '  '
 
 [git_state]
-format = '[\($state( $progress_current of $progress_total)\)]($style)'
+format = '[\($state($progress_current of $progress_total)\)]($style)'
 
 [fill]
 symbol = " "
@@ -150,9 +165,6 @@ symbol = " "
 [kotlin]
 symbol = " "
 
-[lua]
-symbol = " "
-
 [memory_usage]
 symbol = "󰍛 "
 
@@ -164,9 +176,6 @@ symbol = "󰆥 "
 
 [nix_shell]
 symbol = " "
-
-[nodejs]
-symbol = " "
 
 [ocaml]
 symbol = " "

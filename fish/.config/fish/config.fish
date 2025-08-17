@@ -5,7 +5,15 @@ end
 starship init fish | source
 mise activate fish | source
 
-# ASDF configuration code
+# PNPM config
+set -gx PNPM_HOME "$HOME/.local/share/pnpm"
+
+if not contains $PNPM_HOME $PATH
+	fish_add_path -g $PNPM_HOME
+end
+
+# TODO : remove asdf
+# ASDF config
 if test -z $ASDF_DATA_DIR
     set _asdf_shims "$HOME/.asdf/shims"
 else
