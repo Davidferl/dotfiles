@@ -3,6 +3,7 @@ if status is-interactive
 end
 
 starship init fish | source
+mist activate fish | source
 
 # ASDF configuration code
 if test -z $ASDF_DATA_DIR
