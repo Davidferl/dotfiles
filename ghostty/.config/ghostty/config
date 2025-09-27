@@ -42,9 +42,11 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-command = /usr/bin/fish --login --interactive
-theme = rose-pine
+command = /opt/homebrew/bin/fish --login --interactive
+
+theme = nordic
 window-decoration = none
 cursor-style = block
 shell-integration-features = no-cursor
 
+keybind = shift+enter=text:\x1b\r
