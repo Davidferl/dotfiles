@@ -1,0 +1,32 @@
+[
+  {
+    "label": "lazygit",
+    "command": "lazygit",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "reveal_target": "center",
+    "hide": "on_success",
+    "shell": {
+      "with_arguments": {
+        "program": "/opt/homebrew/bin/fish",
+        "args": ["--login", "--interactive"]
+      }
+    },
+    "tags": ["git"]
+  },
+  {
+    "label": "tiltup",
+    "command": "set project (string split -r -m1 / $PWD)[-1]; switch $project; case genisys; set -x TILT_PORT 10350; case echo; set -x TILT_PORT 10351; case '*'; set -x TILT_PORT 10352; end; tilt up",
+    "reveal": "always",
+    "reveal_target": "dock",
+    "hide": "on_success",
+    "shell": {
+      "with_arguments": {
+        "program": "/opt/homebrew/bin/fish",
+        "args": ["--login", "--interactive"]
+      }
+    },
+    "tags": ["tilt"]
+  }
+]
