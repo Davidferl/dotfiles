@@ -1,4 +1,6 @@
 [tools]
-lua = "5"
-neovim = "0.11"
-node = "22"
+lua = "latest"
+neovim = "latest"
+node = "latest"
+go = "latest"
+deno = "latest"
