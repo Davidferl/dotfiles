@@ -17,7 +17,7 @@
   },
   {
     "label": "tiltup",
-    "command": "set project (string split -r -m1 / $PWD)[-1]; switch $project; case genisys; set -x TILT_PORT 10350; case echo; set -x TILT_PORT 10351; case '*'; set -x TILT_PORT 10352; end; tilt up",
+    "command": "set project (string split -r -m1 / $PWD)[-1]; switch $project; case genisys; set -x TILT_PORT 10350; case echo; set -x TILT_PORT 10351; case skynet; set -x TILT_PORT 10352; ; case stratus; set -x TILT_PORT 10353; case '*'; set -x TILT_PORT 10354; end; tilt up",
     "reveal": "always",
     "reveal_target": "dock",
     "hide": "on_success",
