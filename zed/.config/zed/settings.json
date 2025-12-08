@@ -1,6 +1,30 @@
 {
+  "context_servers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://www.shadcn.io/api/mcp"]
+    },
+    "figma": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--figma-api-key=$FIGMA_API_KEY",
+        "--stdio"
+      ]
+    },
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    }
+  },
+  "icon_theme": "Zed (Default)",
   "edit_predictions": {
-    "mode": "eager",
+    "mode": "subtle",
     "copilot": {
       "proxy": null,
       "proxy_no_verify": null,
@@ -29,16 +53,20 @@
     "default_profile": "ask",
     "default_model": {
       "provider": "anthropic",
-      "model": "claude-sonnet-4-latest"
+      "model": "claude-sonnet-4-5-latest"
     },
-    "single_file_review": false,
-    "play_sound_when_agent_done": true
+    "single_file_review": false
   },
   "features": {
-    "edit_prediction_provider": "copilot"
+    "edit_prediction_provider": "zed"
   },
   "dev": {
     "lsp_document_colors": "inlay"
+  },
+  "languages": {
+    "TypeScript": {
+      "language_servers": ["vtsls"]
+    }
   },
   "tab_bar": {
     "show_nav_history_buttons": false,

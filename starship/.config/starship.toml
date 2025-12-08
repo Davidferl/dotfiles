@@ -56,6 +56,11 @@ symbol = " "
 version_format = "$major.$minor"
 format = '[$symbol$version(\($virtualenv\))]($style)'
 
+[rust]
+symbol = "󱘗 "
+version_format = "$major.$minor"
+format = "[$symbol$version]($style)"
+
 [gcloud]
 disabled = true
 symbol = " "
@@ -245,9 +250,6 @@ symbol = "󰟔 "
 
 [ruby]
 symbol = " "
-
-[rust]
-symbol = "󱘗 "
 
 [scala]
 symbol = " "
