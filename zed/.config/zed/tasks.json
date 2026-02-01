@@ -9,7 +9,7 @@
     "hide": "on_success",
     "shell": {
       "with_arguments": {
-        "program": "/opt/homebrew/bin/fish",
+        "program": "fish",
         "args": ["--login", "--interactive"]
       }
     },
@@ -23,10 +23,10 @@
     "hide": "on_success",
     "shell": {
       "with_arguments": {
-        "program": "/opt/homebrew/bin/fish",
+        "program": "fish",
         "args": ["--login", "--interactive"]
       }
     },
     "tags": ["tilt"]
-	}
+  }
 ]

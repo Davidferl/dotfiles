@@ -1,8 +1,9 @@
 {
+  "show_edit_predictions": false,
   "context_servers": {
     "shadcn": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://www.shadcn.io/api/mcp"]
+      "args": ["-y", "mcp-remote", "https://www.shadcn.io/api/mcp"],
     },
     "figma": {
       "command": "npx",
@@ -10,17 +11,17 @@
         "-y",
         "figma-developer-mcp",
         "--figma-api-key=$FIGMA_API_KEY",
-        "--stdio"
-      ]
+        "--stdio",
+      ],
     },
     "linear": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse"]
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse"],
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest"]
-    }
+      "args": ["chrome-devtools-mcp@latest"],
+    },
   },
   "icon_theme": "Zed (Default)",
   "edit_predictions": {
@@ -28,66 +29,77 @@
     "copilot": {
       "proxy": null,
       "proxy_no_verify": null,
-      "enterprise_uri": null
+      "enterprise_uri": null,
     },
-    "enabled_in_text_threads": false
+    "enabled_in_text_threads": false,
   },
   "terminal": {
     "dock": "right",
     "font_family": "JetBrainsMono Nerd Font",
     "toolbar": {
-      "breadcrumbs": false
+      "breadcrumbs": false,
     },
     "shell": {
       "with_arguments": {
-        "program": "/opt/homebrew/bin/fish",
-        "args": ["--login", "--interactive"]
-      }
-    }
+        "program": "fish",
+        "args": ["--login", "--interactive"],
+      },
+    },
+  },
+  "languages": {
+    "TypeScript": {
+      "language_servers": ["!tsgo", "vtsls"],
+    },
+    "TSX": {
+      "language_servers": [
+        "!tsgo",
+        "vtsls",
+        "!typescript-language-server",
+        "...",
+      ],
+    },
+    "JavaScript": {
+      "language_servers": ["!tsgo", "vtsls"],
+    },
   },
   "agent": {
     "inline_assistant_model": {
       "provider": "anthropic",
-      "model": "claude-sonnet-4-5-latest"
+      "model": "claude-sonnet-4-5-latest",
     },
     "default_profile": "ask",
     "default_model": {
       "provider": "anthropic",
-      "model": "claude-sonnet-4-5-latest"
+      "model": "claude-sonnet-4-5-latest",
     },
-    "single_file_review": false
+    "single_file_review": false,
   },
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "zed",
   },
   "dev": {
-    "lsp_document_colors": "inlay"
-  },
-  "languages": {
-    "TypeScript": {
-      "language_servers": ["vtsls"]
-    }
+    "lsp_document_colors": "inlay",
   },
   "tab_bar": {
     "show_nav_history_buttons": false,
-    "show_tab_bar_buttons": false
+    "show_tab_bar_buttons": false,
   },
   "tabs": {
     "git_status": true,
     "activate_on_close": "neighbour",
-    "show_close_button": "hidden"
+    "show_close_button": "hidden",
   },
   "git": {
     "inline_blame": {
-      "enabled": false
-    }
+      "enabled": false,
+    },
   },
   "toolbar": {
     "code_actions": false,
     "agent_review": false,
     "quick_actions": false,
     "selections_menu": false,
-    "breadcrumbs": false
+    "breadcrumbs": false,
   },
   "diagnostics": {
     "inline": {
@@ -95,24 +107,24 @@
       "update_debounce_ms": 150,
       "padding": 4,
       "min_column": 0,
-      "max_severity": null
-    }
+      "max_severity": null,
+    },
   },
   "project_panel": {
     "auto_reveal_entries": false,
     "auto_fold_dirs": false,
     "default_width": 100,
     "scrollbar": {
-      "show": "never"
-    }
+      "show": "never",
+    },
   },
   "vim_mode": true,
   "ui_font_size": 16,
   "buffer_font_size": 15,
   "confirm_quit": true,
   "theme": {
-    "mode": "system",
-    "light": "David's Nordic",
-    "dark": "David's Nordic"
-  }
+    "mode": "light",
+    "light": "Dayfox - opaque",
+    "dark": "David's Nordic",
+  },
 }
