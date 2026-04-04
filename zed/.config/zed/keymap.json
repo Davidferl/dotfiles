@@ -13,15 +13,15 @@
       "ctrl-?": "workspace::NewTerminal",
       "cmd-t": "file_finder::Toggle",
       "cmd-u": "workspace::CloseAllDocks",
-      "cmd-shift-o": "project_symbols::Toggle"
-    }
+      "cmd-shift-o": "project_symbols::Toggle",
+    },
   },
   {
     "context": "Editor",
     "bindings": {
       "cmd-u": "workspace::CloseAllDocks",
-      "cmd-shift-o": "project_symbols::Toggle"
-    }
+      "cmd-shift-o": "project_symbols::Toggle",
+    },
   },
   {
     "context": "Editor && vim_mode == normal",
@@ -35,14 +35,14 @@
       "ctrl-j": "workspace::ActivatePaneDown",
       "space p": "projects::OpenRecent",
       "space g": ["task::Spawn", { "task_name": "lazygit" }],
-      "space t": ["task::Spawn", { "task_name": "tiltup" }]
-    }
+      "space t": ["task::Spawn", { "task_name": "tiltup" }],
+    },
   },
   {
     "context": "Editor && vim_mode == visual",
     "bindings": {
-      "shift-s": ["vim::PushAddSurrounds", {}]
-    }
+      "shift-s": ["vim::PushAddSurrounds", {}],
+    },
   },
   {
     "context": "Dock",
@@ -50,8 +50,8 @@
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
-      "ctrl-j": "workspace::ActivatePaneDown"
+      "ctrl-j": "workspace::ActivatePaneDown",
       // ... or other keybindings
-    }
-  }
+    },
+  },
 ]

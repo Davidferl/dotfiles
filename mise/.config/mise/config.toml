@@ -1,16 +1,13 @@
 [tools]
 lua = "latest"
-neovim = "latest"
 node = "24"
 go = "latest"
 deno = "latest"
 bun = "latest"
 "npm:httpyac" = "latest"
 "npm:vercel" = "latest"
-claude-code = "latest"
 lazygit = "latest"
 lazydocker = "latest"
-"aqua:fish-shell/fish-shell" = "latest"
 bitwarden = "latest"
 zoxide = "latest"
 bat = "latest"
@@ -20,3 +17,10 @@ bat = "latest"
 "npm:ts-node" = "latest"
 "npm:typescript" = "latest"
 "npm:ngrok" = "latest"
+neovim = "latest"
+"aqua:LuaLS/lua-language-server" = "latest"
+"npm:typescript-language-server" = "latest"
+tmux = "latest"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
