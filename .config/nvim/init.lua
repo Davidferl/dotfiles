@@ -24,7 +24,8 @@ vim.pack.add({
 	'https://github.com/nvim-telescope/telescope.nvim',
 	'https://github.com/kdheepak/lazygit.nvim',
 	'https://github.com/lewis6991/gitsigns.nvim',
-	'https://github.com/rrethy/vim-illuminate'
+	'https://github.com/rrethy/vim-illuminate',
+	'https://github.com/sindrets/diffview.nvim'
 })
 
 -- LSP
@@ -107,6 +108,8 @@ require('gitsigns').setup{
 }
 
 -- Keymaps
+
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })

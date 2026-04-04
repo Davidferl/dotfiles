@@ -46,10 +46,8 @@
 
 shell-integration = fish
 
-fullscreen = true
-
 theme = Nvim Light
-window-decoration = none
+window-decoration = auto
 cursor-style = block
 shell-integration-features = no-cursor
 

@@ -1,0 +1,5 @@
+# dotfiles
+
+```
+stow --no-folding .
+```

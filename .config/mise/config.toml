@@ -21,6 +21,8 @@ neovim = "latest"
 "aqua:LuaLS/lua-language-server" = "latest"
 "npm:typescript-language-server" = "latest"
 tmux = "latest"
+opencode = "latest"
+yazi = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
