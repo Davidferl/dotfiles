@@ -46,6 +46,8 @@
 
 shell-integration = fish
 
+font-family = "Monaspace Argon NF Regular"
+
 theme = Nvim Light
 window-decoration = auto
 cursor-style = block

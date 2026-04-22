@@ -1,8 +1,16 @@
 {
   "plugins": {
+    "blink.cmp": {
+      "rev": "c573a15a62bd0bfd4006ee0849b24f5404395500",
+      "src": "https://github.com/Saghen/blink.cmp"
+    },
     "diffview.nvim": {
       "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
       "src": "https://github.com/sindrets/diffview.nvim"
+    },
+    "github-nvim-theme": {
+      "rev": "c106c9472154d6b2c74b74565616b877ae8ed31d",
+      "src": "https://github.com/projekt0n/github-nvim-theme"
     },
     "gitsigns.nvim": {
       "rev": "944ef13cc8d8fe8b846c91f36041c8dfb85ca000",
@@ -31,6 +39,10 @@
     "vim-illuminate": {
       "rev": "0d1e93684da00ab7c057410fecfc24f434698898",
       "src": "https://github.com/rrethy/vim-illuminate"
+    },
+    "yazi.nvim": {
+      "rev": "dd16f99c63674c796d65500e40e967ff628e0ba4",
+      "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
 }

@@ -9,11 +9,14 @@ vim.o.smartcase = true
 vim.o.ignorecase = true
 
 vim.o.hlsearch = true
+vim.o.completeopt = 'menuone,noselect,popup'
+vim.o.cursorline = true
 vim.o.signcolumn = 'yes'
+vim.o.winbar = '%f'
+vim.o.laststatus = 0
 
 vim.o.winborder = 'rounded'
-vim.o.background = "light"
-vim.cmd.colorscheme('default')
+vim.cmd.colorscheme('github_light')
 
 vim.g.mapleader = vim.keycode('<space>')
 
@@ -25,7 +28,10 @@ vim.pack.add({
 	'https://github.com/kdheepak/lazygit.nvim',
 	'https://github.com/lewis6991/gitsigns.nvim',
 	'https://github.com/rrethy/vim-illuminate',
-	'https://github.com/sindrets/diffview.nvim'
+	'https://github.com/sindrets/diffview.nvim',
+	'https://github.com/mikavilpas/yazi.nvim',
+	'https://github.com/Saghen/blink.cmp',
+	'https://github.com/projekt0n/github-nvim-theme',
 })
 
 -- LSP
@@ -107,6 +113,18 @@ require('gitsigns').setup{
   end
 }
 
+-- Completion
+
+require('blink.cmp').setup({
+  keymap = { preset = 'default' },
+  completion = {
+    documentation = { auto_show = true },
+  },
+  sources = {
+    default = { 'lsp', 'path', 'buffer' },
+  },
+})
+
 -- Keymaps
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -124,18 +142,10 @@ vim.keymap.set('n', '<leader>fh', telescope.help_tags, { desc = 'Telescope help 
 
 vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit'})
 
+require('yazi').setup({
+  open_for_directories = true,
+})
 
+vim.keymap.set('n', '<leader>e', '<cmd>Yazi<CR>', { desc = 'Open Yazi' })
+vim.keymap.set('n', '<leader>cw', '<cmd>Yazi cwd<CR>', { desc = 'Open Yazi in cwd' })
 
--- vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
---   group = vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true }),
---   callback = function()
---     vim.lsp.buf.document_highlight()
---   end,
--- })
---
--- vim.api.nvim_create_autocmd({ "CursorMoved" }, {
---   group = "lsp_document_highlight",
---   callback = function()
---     vim.lsp.buf.clear_references()
---   end,
--- })
