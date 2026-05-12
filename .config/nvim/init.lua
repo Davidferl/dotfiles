@@ -14,9 +14,7 @@ vim.o.cursorline = true
 vim.o.signcolumn = 'yes'
 vim.o.winbar = '%f'
 vim.o.laststatus = 0
-
 vim.o.winborder = 'rounded'
-vim.cmd.colorscheme('github_light')
 
 vim.g.mapleader = vim.keycode('<space>')
 
@@ -25,23 +23,31 @@ vim.pack.add({
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	'https://github.com/neovim/nvim-lspconfig',
 	'https://github.com/nvim-telescope/telescope.nvim',
+	'https://github.com/nvim-telescope/telescope-ui-select.nvim',
 	'https://github.com/kdheepak/lazygit.nvim',
 	'https://github.com/lewis6991/gitsigns.nvim',
 	'https://github.com/rrethy/vim-illuminate',
 	'https://github.com/sindrets/diffview.nvim',
 	'https://github.com/mikavilpas/yazi.nvim',
 	'https://github.com/Saghen/blink.cmp',
-	'https://github.com/projekt0n/github-nvim-theme',
+	'https://github.com/navarasu/onedark.nvim',
+	'https://github.com/NLKNguyen/papercolor-theme',
+	'https://github.com/ThorstenRhau/token',
+	'https://github.com/christoomey/vim-tmux-navigator',
 })
+
+vim.o.background = 'light'
+vim.cmd.colorscheme('token')
 
 -- LSP
 
-vim.lsp.enable({ 'lua_ls'})
-vim.lsp.enable({ 'ts_ls'})
-vim.lsp.enable({ 'prismals' })
-vim.lsp.enable({ 'oxfmt' })
-vim.lsp.enable({ 'oxlint' })
-vim.lsp.enable({ 'tilt_ls' })
+vim.lsp.enable('lua_ls')
+vim.lsp.enable('ts_ls')
+vim.lsp.enable('prismals')
+vim.lsp.enable('oxfmt')
+vim.lsp.enable('oxlint')
+vim.lsp.enable('tilt_ls')
+vim.lsp.enable('sourcekit')
 
 -- Git
 
@@ -116,7 +122,10 @@ require('gitsigns').setup{
 -- Completion
 
 require('blink.cmp').setup({
-  keymap = { preset = 'default' },
+  keymap = {
+    preset = 'default',
+    ['<CR>'] = { 'accept', 'fallback' },
+  },
   completion = {
     documentation = { auto_show = true },
   },
@@ -124,6 +133,30 @@ require('blink.cmp').setup({
     default = { 'lsp', 'path', 'buffer' },
   },
 })
+
+-- Telescope
+
+require('telescope').setup({
+  pickers = {
+    find_files = {
+      hidden = true,
+      file_ignore_patterns = { '^%.git/' },
+    },
+    live_grep = {
+      additional_args = function() return { '--hidden', '--glob', '!**/.git/*' } end,
+    },
+  },
+  extensions = {
+    ['ui-select'] = {
+      require('telescope.themes').get_dropdown({}),
+    },
+  },
+})
+require('telescope').load_extension('ui-select')
+
+-- Diagnostics
+
+vim.diagnostic.config({ underline = true, virtual_text = true, signs = true, severity_sort = true })
 
 -- Keymaps
 
@@ -142,10 +175,18 @@ vim.keymap.set('n', '<leader>fh', telescope.help_tags, { desc = 'Telescope help 
 
 vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit'})
 
+vim.keymap.set('n', '<leader>dd', '<cmd>DiffviewOpen origin/master...HEAD<CR>', { desc = 'Diff PR against master' })
+vim.keymap.set('n', '<leader>dc', '<cmd>DiffviewClose<CR>', { desc = 'Close Diffview' })
+
 require('yazi').setup({
   open_for_directories = true,
+  floating_window_scaling_factor = 1.0,
+  yazi_floating_window_border = 'none',
 })
 
 vim.keymap.set('n', '<leader>e', '<cmd>Yazi<CR>', { desc = 'Open Yazi' })
 vim.keymap.set('n', '<leader>cw', '<cmd>Yazi cwd<CR>', { desc = 'Open Yazi in cwd' })
+
+vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
+vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
 

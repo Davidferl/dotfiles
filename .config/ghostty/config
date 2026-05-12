@@ -45,6 +45,7 @@
 # command = fish --login --interactive
 
 shell-integration = fish
+keybind = cmd+enter=unbind
 
 font-family = "Monaspace Argon NF Regular"
 

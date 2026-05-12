@@ -1,4 +1,13 @@
 {
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "git_panel": {
+    "dock": "left"
+  },
   "lsp": {
     "vtsls": {
       "settings": {
@@ -83,6 +92,7 @@
     },
   },
   "agent": {
+    "dock": "right",
     "inline_assistant_model": {
       "provider": "anthropic",
       "model": "claude-sonnet-4-6-latest",
@@ -128,6 +138,7 @@
     },
   },
   "project_panel": {
+    "dock": "left",
     "auto_reveal_entries": false,
     "auto_fold_dirs": false,
     "default_width": 100,
