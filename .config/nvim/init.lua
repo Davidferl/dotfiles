@@ -27,7 +27,8 @@ vim.pack.add({
 	'https://github.com/kdheepak/lazygit.nvim',
 	'https://github.com/lewis6991/gitsigns.nvim',
 	'https://github.com/rrethy/vim-illuminate',
-	'https://github.com/sindrets/diffview.nvim',
+	'https://github.com/MunifTanjim/nui.nvim',
+	'https://github.com/clabby/difftastic.nvim',
 	'https://github.com/mikavilpas/yazi.nvim',
 	'https://github.com/Saghen/blink.cmp',
 	'https://github.com/navarasu/onedark.nvim',
@@ -38,6 +39,10 @@ vim.pack.add({
 
 vim.o.background = 'light'
 vim.cmd.colorscheme('token')
+
+-- Soften the diff colors; difftastic and other plugins inherit from these semantic groups
+vim.api.nvim_set_hl(0, 'Added', { fg = '#8cb285' })
+vim.api.nvim_set_hl(0, 'Removed', { fg = '#d29494' })
 
 -- LSP
 
@@ -54,6 +59,7 @@ vim.lsp.enable('sourcekit')
 vim.g.lazygit_floating_window_scaling_factor = 1
 
 require('gitsigns').setup{
+  current_line_blame = true,
   on_attach = function(bufnr)
     local gitsigns = require('gitsigns')
 
@@ -110,14 +116,17 @@ require('gitsigns').setup{
     map('n', '<leader>hQ', function() gitsigns.setqflist('all') end)
     map('n', '<leader>hq', gitsigns.setqflist)
 
-    -- Toggles
-    map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
-    map('n', '<leader>tw', gitsigns.toggle_word_diff)
-
     -- Text object
     map({'o', 'x'}, 'ih', gitsigns.select_hunk)
   end
 }
+
+-- Diff
+
+require('difftastic-nvim').setup({
+  vcs = 'git',
+  download = false,
+})
 
 -- Completion
 
@@ -137,13 +146,28 @@ require('blink.cmp').setup({
 -- Telescope
 
 require('telescope').setup({
+  defaults = {
+    sorting_strategy = 'ascending',
+    layout_config = {
+      prompt_position = 'top',
+    },
+  },
   pickers = {
     find_files = {
       hidden = true,
       file_ignore_patterns = { '^%.git/' },
     },
     live_grep = {
+      previewer = false,
       additional_args = function() return { '--hidden', '--glob', '!**/.git/*' } end,
+    },
+    buffers = {
+      previewer = false,
+    },
+    lsp_dynamic_workspace_symbols = {
+      symbols = { 'method', 'variable' },
+      fname_width = 60,
+      symbol_width = 30,
     },
   },
   extensions = {
@@ -153,6 +177,9 @@ require('telescope').setup({
   },
 })
 require('telescope').load_extension('ui-select')
+
+-- Make the matched line in the grep preview clearly visible
+vim.api.nvim_set_hl(0, 'TelescopePreviewLine', { bg = '#fff3a3', bold = true })
 
 -- Diagnostics
 
@@ -168,15 +195,16 @@ vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
 
 local telescope = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', telescope.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>fg', telescope.live_grep, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>fb', telescope.buffers, { desc = 'Telescope buffers' })
-vim.keymap.set('n', '<leader>fh', telescope.help_tags, { desc = 'Telescope help tags' })
+vim.keymap.set('n', '<leader>f', telescope.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>s', telescope.lsp_dynamic_workspace_symbols, { desc = 'Telescope workspace symbols (methods/variables)' })
+vim.keymap.set('n', '<leader>t', telescope.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>b', telescope.buffers, { desc = 'Telescope buffers' })
 
 vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit'})
 
-vim.keymap.set('n', '<leader>dd', '<cmd>DiffviewOpen origin/master...HEAD<CR>', { desc = 'Diff PR against master' })
-vim.keymap.set('n', '<leader>dc', '<cmd>DiffviewClose<CR>', { desc = 'Close Diffview' })
+vim.keymap.set('n', '<leader>dd', '<cmd>Difft origin/master...HEAD<CR>', { desc = 'Difftastic: diff branch against master' })
+vim.keymap.set('n', '<leader>ds', '<cmd>Difft --staged<CR>', { desc = 'Difftastic: diff staged changes' })
+vim.keymap.set('n', '<leader>dc', '<cmd>DifftClose<CR>', { desc = 'Difftastic: close diff' })
 
 require('yazi').setup({
   open_for_directories = true,
