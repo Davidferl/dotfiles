@@ -12,8 +12,7 @@ vim.o.hlsearch = true
 vim.o.completeopt = 'menuone,noselect,popup'
 vim.o.cursorline = true
 vim.o.signcolumn = 'yes'
-vim.o.winbar = '%f'
-vim.o.laststatus = 0
+vim.o.laststatus = 3
 vim.o.winborder = 'rounded'
 
 vim.g.mapleader = vim.keycode('<space>')
@@ -30,9 +29,10 @@ vim.pack.add({
 	'https://github.com/MunifTanjim/nui.nvim',
 	'https://github.com/clabby/difftastic.nvim',
 	'https://github.com/mikavilpas/yazi.nvim',
+	'https://github.com/MeanderingProgrammer/render-markdown.nvim',
+	'https://github.com/karb94/neoscroll.nvim',
+	'https://github.com/nvim-lualine/lualine.nvim',
 	'https://github.com/Saghen/blink.cmp',
-	'https://github.com/navarasu/onedark.nvim',
-	'https://github.com/NLKNguyen/papercolor-theme',
 	'https://github.com/ThorstenRhau/token',
 	'https://github.com/christoomey/vim-tmux-navigator',
 })
@@ -47,6 +47,19 @@ vim.api.nvim_set_hl(0, 'Removed', { fg = '#d29494' })
 -- LSP
 
 vim.lsp.enable('lua_ls')
+
+-- ts_ls needs a `typescript` install to start; without one it exits before attaching.
+-- Point it at whatever tsserver is on PATH (e.g. the global mise typescript) so it works
+-- even before a project's deps are installed. Derive the lib dir from the binary:
+-- <prefix>/typescript/bin/tsserver  ->  <prefix>/typescript/lib
+local tsserver = vim.fn.exepath('tsserver')
+if tsserver ~= '' then
+	local real = vim.uv.fs_realpath(tsserver) or tsserver
+	local lib = vim.fs.joinpath(vim.fs.dirname(vim.fs.dirname(real)), 'lib')
+	vim.lsp.config('ts_ls', {
+		init_options = { tsserver = { path = lib } },
+	})
+end
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('prismals')
 vim.lsp.enable('oxfmt')
@@ -128,6 +141,33 @@ require('difftastic-nvim').setup({
   download = false,
 })
 
+-- Markdown
+
+require('render-markdown').setup({})
+
+-- Scrolling
+
+require('neoscroll').setup({})
+
+-- Statusline
+
+require('lualine').setup({
+  options = {
+    theme = 'token',
+    globalstatus = true,
+    component_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch', 'diff', 'diagnostics' },
+    lualine_c = { { 'filename', path = 1 } },
+    lualine_x = { 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' },
+  },
+})
+
 -- Completion
 
 require('blink.cmp').setup({
@@ -194,6 +234,8 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
 
+vim.keymap.set('n', '<leader>o', '<cmd>only<CR>', { desc = 'Close all other splits' })
+
 local telescope = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', telescope.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>s', telescope.lsp_dynamic_workspace_symbols, { desc = 'Telescope workspace symbols (methods/variables)' })
@@ -210,10 +252,15 @@ require('yazi').setup({
   open_for_directories = true,
   floating_window_scaling_factor = 1.0,
   yazi_floating_window_border = 'none',
+  keymaps = {
+    show_help = '<c-_>',
+  },
 })
 
 vim.keymap.set('n', '<leader>e', '<cmd>Yazi<CR>', { desc = 'Open Yazi' })
 vim.keymap.set('n', '<leader>cw', '<cmd>Yazi cwd<CR>', { desc = 'Open Yazi in cwd' })
+
+vim.keymap.set('n', '<leader>r', '<cmd>edit!<CR>', { desc = 'Reload file from disk (:e!)' })
 
 vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
 vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
