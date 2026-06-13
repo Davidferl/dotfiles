@@ -35,6 +35,7 @@ vim.pack.add({
 	'https://github.com/Saghen/blink.cmp',
 	'https://github.com/ThorstenRhau/token',
 	'https://github.com/christoomey/vim-tmux-navigator',
+	'https://github.com/folke/which-key.nvim',
 })
 
 vim.o.background = 'light'
@@ -67,6 +68,30 @@ vim.lsp.enable('oxlint')
 vim.lsp.enable('tilt_ls')
 vim.lsp.enable('sourcekit')
 
+-- Format on save via LSP. If a dedicated formatter (oxfmt) is attached, only it
+-- formats; otherwise fall back to whatever language server offers formatting.
+vim.api.nvim_create_autocmd('BufWritePre', {
+	callback = function(args)
+		local has_oxfmt = false
+		for _, c in ipairs(vim.lsp.get_clients({ bufnr = args.buf })) do
+			if c.name == 'oxfmt' then
+				has_oxfmt = true
+				break
+			end
+		end
+		vim.lsp.buf.format({
+			bufnr = args.buf,
+			timeout_ms = 2000,
+			filter = function(client)
+				if has_oxfmt then
+					return client.name == 'oxfmt'
+				end
+				return true
+			end,
+		})
+	end,
+})
+
 -- Git
 
 vim.g.lazygit_floating_window_scaling_factor = 1
@@ -89,7 +114,7 @@ require('gitsigns').setup{
       else
         gitsigns.nav_hunk('next')
       end
-    end)
+    end, { desc = 'Next hunk' })
 
     map('n', '[c', function()
       if vim.wo.diff then
@@ -97,40 +122,40 @@ require('gitsigns').setup{
       else
         gitsigns.nav_hunk('prev')
       end
-    end)
+    end, { desc = 'Previous hunk' })
 
     -- Actions
-    map('n', '<leader>hs', gitsigns.stage_hunk)
-    map('n', '<leader>hr', gitsigns.reset_hunk)
+    map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'Stage hunk' })
+    map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'Reset hunk' })
 
     map('v', '<leader>hs', function()
       gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-    end)
+    end, { desc = 'Stage selected hunk' })
 
     map('v', '<leader>hr', function()
       gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-    end)
+    end, { desc = 'Reset selected hunk' })
 
-    map('n', '<leader>hS', gitsigns.stage_buffer)
-    map('n', '<leader>hR', gitsigns.reset_buffer)
-    map('n', '<leader>hp', gitsigns.preview_hunk)
-    map('n', '<leader>hi', gitsigns.preview_hunk_inline)
+    map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'Stage buffer' })
+    map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'Reset buffer' })
+    map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'Preview hunk' })
+    map('n', '<leader>hi', gitsigns.preview_hunk_inline, { desc = 'Preview hunk inline' })
 
     map('n', '<leader>hb', function()
       gitsigns.blame_line({ full = true })
-    end)
+    end, { desc = 'Blame line' })
 
-    map('n', '<leader>hd', gitsigns.diffthis)
+    map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Diff this' })
 
     map('n', '<leader>hD', function()
       gitsigns.diffthis('~')
-    end)
+    end, { desc = 'Diff this (~)' })
 
-    map('n', '<leader>hQ', function() gitsigns.setqflist('all') end)
-    map('n', '<leader>hq', gitsigns.setqflist)
+    map('n', '<leader>hQ', function() gitsigns.setqflist('all') end, { desc = 'Hunks to quickfix (all)' })
+    map('n', '<leader>hq', gitsigns.setqflist, { desc = 'Hunks to quickfix' })
 
     -- Text object
-    map({'o', 'x'}, 'ih', gitsigns.select_hunk)
+    map({'o', 'x'}, 'ih', gitsigns.select_hunk, { desc = 'Select hunk' })
   end
 }
 
@@ -161,10 +186,16 @@ require('lualine').setup({
   sections = {
     lualine_a = { 'mode' },
     lualine_b = { 'branch', 'diff', 'diagnostics' },
-    lualine_c = { { 'filename', path = 1 } },
+    lualine_c = {},
     lualine_x = { 'filetype' },
     lualine_y = { 'progress' },
     lualine_z = { 'location' },
+  },
+  winbar = {
+    lualine_c = { { 'filename', path = 1 } },
+  },
+  inactive_winbar = {
+    lualine_c = { { 'filename', path = 1 } },
   },
 })
 
@@ -224,6 +255,15 @@ vim.api.nvim_set_hl(0, 'TelescopePreviewLine', { bg = '#fff3a3', bold = true })
 -- Diagnostics
 
 vim.diagnostic.config({ underline = true, virtual_text = true, signs = true, severity_sort = true })
+
+-- Which-key
+
+local wk = require('which-key')
+wk.setup({})
+wk.add({
+  { '<leader>h', group = 'Git hunks' },
+  { '<leader>d', group = 'Diff / diagnostics' },
+})
 
 -- Keymaps
 

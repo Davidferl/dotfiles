@@ -50,7 +50,8 @@ keybind = cmd+enter=unbind
 font-family = "Monaspace Argon NF Regular"
 
 theme = Nvim Light
-window-decoration = auto
+
+window-decoration = none
 cursor-style = block
 shell-integration-features = no-cursor
 

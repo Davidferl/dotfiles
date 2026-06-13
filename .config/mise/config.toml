@@ -25,6 +25,7 @@ opencode = "latest"
 yazi = "latest"
 "npm:oxfmt" = "latest"
 "npm:@prisma/language-server" = "latest"
+difftastic = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
