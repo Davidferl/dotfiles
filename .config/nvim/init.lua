@@ -34,7 +34,6 @@ vim.pack.add({
 	'https://github.com/nvim-lualine/lualine.nvim',
 	'https://github.com/Saghen/blink.cmp',
 	'https://github.com/ThorstenRhau/token',
-	'https://github.com/christoomey/vim-tmux-navigator',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/mistweaverco/kulala.nvim',
 })
