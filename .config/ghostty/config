@@ -45,8 +45,10 @@
 # command = fish --login --interactive
 
 shell-integration = fish
-keybind = cmd+enter=unbind
+# `super` maps to Cmd on macOS and Super on Linux; `cmd` is macOS-only.
+keybind = super+enter=unbind
 
+# macOS-only; a known config key on all platforms, ignored off macOS.
 macos-option-as-alt = true
 
 font-family = "Monaspace Argon NF Regular"
