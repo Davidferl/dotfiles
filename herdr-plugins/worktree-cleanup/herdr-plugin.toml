@@ -1,0 +1,9 @@
+id = "david.worktree-cleanup"
+name = "Worktree Cleanup"
+version = "0.1.0"
+min_herdr_version = "0.7.0"
+platforms = ["macos"]
+
+[[events]]
+on = "worktree.removed"
+command = ["bash", "on-worktree-removed.sh"]

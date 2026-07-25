@@ -12,6 +12,11 @@ function worktc
         return 1
     end
 
+    # Best-effort teardown of the Tilt environment before removing the worktree.
+    if type -q tilt; and test -e $current/Tiltfile
+        tilt down -f $current/Tiltfile
+    end
+
     cd $main
     and git worktree remove $current $argv
 end

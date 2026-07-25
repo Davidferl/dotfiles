@@ -25,7 +25,12 @@ opencode = "latest"
 yazi = "latest"
 "npm:oxfmt" = "latest"
 "npm:@prisma/language-server" = "latest"
+"npm:tree-sitter-cli" = "latest"
 difftastic = "latest"
+caddy = "latest"
+infisical = "latest"
+"npm:codemogger" = "latest"
+herdr = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

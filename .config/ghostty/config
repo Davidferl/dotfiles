@@ -47,6 +47,8 @@
 shell-integration = fish
 keybind = cmd+enter=unbind
 
+macos-option-as-alt = true
+
 font-family = "Monaspace Argon NF Regular"
 
 theme = Nvim Light

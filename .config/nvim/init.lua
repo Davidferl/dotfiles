@@ -36,14 +36,62 @@ vim.pack.add({
 	'https://github.com/ThorstenRhau/token',
 	'https://github.com/christoomey/vim-tmux-navigator',
 	'https://github.com/folke/which-key.nvim',
+	'https://github.com/mistweaverco/kulala.nvim',
 })
 
 vim.o.background = 'light'
+
+-- Boost contrast of token's light palette against the cream background. token is a
+-- no-config theme, but it recomputes every highlight from `token.palette` on load.
+-- Intercepting that module via package.preload (which survives the package.loaded
+-- wipe in token's loader) lets us deepen the hues in one place, so syntax, LSP
+-- semantic tokens, and plugin groups all gain contrast. Dark variant is untouched.
+-- NOTE: applies on the dynamic load path only — don't run :TokenCompile, as its
+-- bytecode cache bypasses this hook.
+local token_palette = require('token.palette')
+package.preload['token.palette'] = function()
+	return function(background)
+		local p = token_palette(background)
+		if background == 'light' then
+			p.accent = '#aa3f14' -- functions, titles
+			p.accent2 = '#855212' -- keywords, booleans
+			p.blue = '#2b6595'
+			p.green = '#266a34'
+			p.red = '#b43535'
+			p.yellow = '#7a6800'
+			p.purple = '#7c43a5'
+			p.cyan = '#166f6f'
+			p.orange = '#a14c0a'
+			p.olive = '#546d19'
+			p.fg2 = '#585450' -- comments, muted text
+			p.fg3 = '#6b675f' -- most-muted foreground
+			p.line_nr = '#9a968e'
+		end
+		return p
+	end
+end
+
 vim.cmd.colorscheme('token')
 
 -- Soften the diff colors; difftastic and other plugins inherit from these semantic groups
 vim.api.nvim_set_hl(0, 'Added', { fg = '#8cb285' })
 vim.api.nvim_set_hl(0, 'Removed', { fg = '#d29494' })
+
+-- Bold the keyword family for emphasis (token leaves core syntax at regular weight).
+-- Re-set each group with its own colors plus bold; linked subgroups (@keyword,
+-- @keyword.conditional, @keyword.import, ...) inherit the bold automatically.
+local function bold_group(group)
+	local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+	hl.bold = true
+	vim.api.nvim_set_hl(0, group, hl)
+end
+for _, g in ipairs({
+	'Keyword', 'Statement', 'Conditional', 'Repeat', 'Exception', 'Include', 'Define',
+	'@keyword.coroutine', '@keyword.function', '@keyword.operator', '@keyword.type',
+	'@keyword.return', '@keyword.modifier', '@keyword.debug',
+}) do
+	bold_group(g)
+end
 
 -- LSP
 
@@ -66,6 +114,12 @@ vim.lsp.enable('prismals')
 vim.lsp.enable('oxfmt')
 vim.lsp.enable('oxlint')
 vim.lsp.enable('tilt_ls')
+-- Launch sourcekit-lsp through `xcrun` so it resolves to the active Xcode toolchain
+-- (which has the iOS SDK). The bare `sourcekit-lsp` on PATH is swiftly's standalone
+-- toolchain, which lacks the iOS SDK and fails with "Setting up ASTContext failed".
+vim.lsp.config('sourcekit', {
+	cmd = { 'xcrun', 'sourcekit-lsp' },
+})
 vim.lsp.enable('sourcekit')
 
 -- Format on save via LSP. If a dedicated formatter (oxfmt) is attached, only it
@@ -96,79 +150,83 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 vim.g.lazygit_floating_window_scaling_factor = 1
 
-require('gitsigns').setup{
-  current_line_blame = true,
-  on_attach = function(bufnr)
-    local gitsigns = require('gitsigns')
+require('gitsigns').setup {
+	current_line_blame = true,
+	on_attach = function(bufnr)
+		local gitsigns = require('gitsigns')
 
-    local function map(mode, l, r, opts)
-      opts = opts or {}
-      opts.buffer = bufnr
-      vim.keymap.set(mode, l, r, opts)
-    end
+		local function map(mode, l, r, opts)
+			opts = opts or {}
+			opts.buffer = bufnr
+			vim.keymap.set(mode, l, r, opts)
+		end
 
-    -- Navigation
-    map('n', ']c', function()
-      if vim.wo.diff then
-        vim.cmd.normal({']c', bang = true})
-      else
-        gitsigns.nav_hunk('next')
-      end
-    end, { desc = 'Next hunk' })
+		-- Navigation
+		map('n', ']c', function()
+			if vim.wo.diff then
+				vim.cmd.normal({ ']c', bang = true })
+			else
+				gitsigns.nav_hunk('next')
+			end
+		end, { desc = 'Next hunk' })
 
-    map('n', '[c', function()
-      if vim.wo.diff then
-        vim.cmd.normal({'[c', bang = true})
-      else
-        gitsigns.nav_hunk('prev')
-      end
-    end, { desc = 'Previous hunk' })
+		map('n', '[c', function()
+			if vim.wo.diff then
+				vim.cmd.normal({ '[c', bang = true })
+			else
+				gitsigns.nav_hunk('prev')
+			end
+		end, { desc = 'Previous hunk' })
 
-    -- Actions
-    map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'Stage hunk' })
-    map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'Reset hunk' })
+		-- Actions
+		map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'Stage hunk' })
+		map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'Reset hunk' })
 
-    map('v', '<leader>hs', function()
-      gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-    end, { desc = 'Stage selected hunk' })
+		map('v', '<leader>hs', function()
+			gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+		end, { desc = 'Stage selected hunk' })
 
-    map('v', '<leader>hr', function()
-      gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-    end, { desc = 'Reset selected hunk' })
+		map('v', '<leader>hr', function()
+			gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+		end, { desc = 'Reset selected hunk' })
 
-    map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'Stage buffer' })
-    map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'Reset buffer' })
-    map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'Preview hunk' })
-    map('n', '<leader>hi', gitsigns.preview_hunk_inline, { desc = 'Preview hunk inline' })
+		map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'Stage buffer' })
+		map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'Reset buffer' })
+		map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'Preview hunk' })
+		map('n', '<leader>hi', gitsigns.preview_hunk_inline, { desc = 'Preview hunk inline' })
 
-    map('n', '<leader>hb', function()
-      gitsigns.blame_line({ full = true })
-    end, { desc = 'Blame line' })
+		map('n', '<leader>hb', function()
+			gitsigns.blame_line({ full = true })
+		end, { desc = 'Blame line' })
 
-    map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Diff this' })
+		map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Diff this' })
 
-    map('n', '<leader>hD', function()
-      gitsigns.diffthis('~')
-    end, { desc = 'Diff this (~)' })
+		map('n', '<leader>hD', function()
+			gitsigns.diffthis('~')
+		end, { desc = 'Diff this (~)' })
 
-    map('n', '<leader>hQ', function() gitsigns.setqflist('all') end, { desc = 'Hunks to quickfix (all)' })
-    map('n', '<leader>hq', gitsigns.setqflist, { desc = 'Hunks to quickfix' })
+		map('n', '<leader>hQ', function() gitsigns.setqflist('all') end, { desc = 'Hunks to quickfix (all)' })
+		map('n', '<leader>hq', gitsigns.setqflist, { desc = 'Hunks to quickfix' })
 
-    -- Text object
-    map({'o', 'x'}, 'ih', gitsigns.select_hunk, { desc = 'Select hunk' })
-  end
+		-- Text object
+		map({ 'o', 'x' }, 'ih', gitsigns.select_hunk, { desc = 'Select hunk' })
+	end
 }
 
 -- Diff
 
 require('difftastic-nvim').setup({
-  vcs = 'git',
-  download = false,
+	vcs = 'git',
+	download = false,
 })
 
 -- Markdown
 
 require('render-markdown').setup({})
+
+-- REST client (kulala)
+
+require('kulala').setup({})
 
 -- Scrolling
 
@@ -177,75 +235,75 @@ require('neoscroll').setup({})
 -- Statusline
 
 require('lualine').setup({
-  options = {
-    theme = 'token',
-    globalstatus = true,
-    component_separators = { left = '', right = '' },
-    section_separators = { left = '', right = '' },
-  },
-  sections = {
-    lualine_a = { 'mode' },
-    lualine_b = { 'branch', 'diff', 'diagnostics' },
-    lualine_c = {},
-    lualine_x = { 'filetype' },
-    lualine_y = { 'progress' },
-    lualine_z = { 'location' },
-  },
-  winbar = {
-    lualine_c = { { 'filename', path = 1 } },
-  },
-  inactive_winbar = {
-    lualine_c = { { 'filename', path = 1 } },
-  },
+	options = {
+		theme = 'token',
+		globalstatus = true,
+		component_separators = { left = '', right = '' },
+		section_separators = { left = '', right = '' },
+	},
+	sections = {
+		lualine_a = { 'mode' },
+		lualine_b = { 'branch', 'diff', 'diagnostics' },
+		lualine_c = {},
+		lualine_x = { 'filetype' },
+		lualine_y = { 'progress' },
+		lualine_z = { 'location' },
+	},
+	winbar = {
+		lualine_c = { { 'filename', path = 1 } },
+	},
+	inactive_winbar = {
+		lualine_c = { { 'filename', path = 1 } },
+	},
 })
 
 -- Completion
 
 require('blink.cmp').setup({
-  keymap = {
-    preset = 'default',
-    ['<CR>'] = { 'accept', 'fallback' },
-  },
-  completion = {
-    documentation = { auto_show = true },
-  },
-  sources = {
-    default = { 'lsp', 'path', 'buffer' },
-  },
+	keymap = {
+		preset = 'default',
+		['<CR>'] = { 'accept', 'fallback' },
+	},
+	completion = {
+		documentation = { auto_show = true },
+	},
+	sources = {
+		default = { 'lsp', 'path', 'buffer' },
+	},
 })
 
 -- Telescope
 
 require('telescope').setup({
-  defaults = {
-    sorting_strategy = 'ascending',
-    layout_config = {
-      prompt_position = 'top',
-    },
-  },
-  pickers = {
-    find_files = {
-      hidden = true,
-      file_ignore_patterns = { '^%.git/' },
-    },
-    live_grep = {
-      previewer = false,
-      additional_args = function() return { '--hidden', '--glob', '!**/.git/*' } end,
-    },
-    buffers = {
-      previewer = false,
-    },
-    lsp_dynamic_workspace_symbols = {
-      symbols = { 'method', 'variable' },
-      fname_width = 60,
-      symbol_width = 30,
-    },
-  },
-  extensions = {
-    ['ui-select'] = {
-      require('telescope.themes').get_dropdown({}),
-    },
-  },
+	defaults = {
+		sorting_strategy = 'ascending',
+		layout_config = {
+			prompt_position = 'top',
+		},
+	},
+	pickers = {
+		find_files = {
+			hidden = true,
+			file_ignore_patterns = { '^%.git/' },
+		},
+		live_grep = {
+			previewer = false,
+			additional_args = function() return { '--hidden', '--glob', '!**/.git/*' } end,
+		},
+		buffers = {
+			previewer = false,
+		},
+		lsp_dynamic_workspace_symbols = {
+			symbols = { 'method', 'variable' },
+			fname_width = 60,
+			symbol_width = 30,
+		},
+	},
+	extensions = {
+		['ui-select'] = {
+			require('telescope.themes').get_dropdown({}),
+		},
+	},
 })
 require('telescope').load_extension('ui-select')
 
@@ -261,8 +319,9 @@ vim.diagnostic.config({ underline = true, virtual_text = true, signs = true, sev
 local wk = require('which-key')
 wk.setup({})
 wk.add({
-  { '<leader>h', group = 'Git hunks' },
-  { '<leader>d', group = 'Diff / diagnostics' },
+	{ '<leader>h', group = 'Git hunks' },
+	{ '<leader>d', group = 'Diff / diagnostics' },
+	{ '<leader>R', group = 'REST (kulala)' },
 })
 
 -- Keymaps
@@ -278,23 +337,31 @@ vim.keymap.set('n', '<leader>o', '<cmd>only<CR>', { desc = 'Close all other spli
 
 local telescope = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', telescope.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>s', telescope.lsp_dynamic_workspace_symbols, { desc = 'Telescope workspace symbols (methods/variables)' })
+vim.keymap.set('n', '<leader>s', telescope.lsp_dynamic_workspace_symbols,
+	{ desc = 'Telescope workspace symbols (methods/variables)' })
 vim.keymap.set('n', '<leader>t', telescope.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>b', telescope.buffers, { desc = 'Telescope buffers' })
 
-vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit'})
+vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit' })
 
-vim.keymap.set('n', '<leader>dd', '<cmd>Difft origin/master...HEAD<CR>', { desc = 'Difftastic: diff branch against master' })
+vim.keymap.set('n', '<leader>dd', function()
+	-- Prefer master, fall back to main if master doesn't exist
+	local function branch_exists(ref)
+		return vim.fn.system({ 'git', 'rev-parse', '--verify', '--quiet', ref }) ~= ''
+	end
+	local base = branch_exists('origin/master') and 'origin/master' or 'origin/main'
+	vim.cmd('Difft ' .. base .. '...HEAD')
+end, { desc = 'Difftastic: diff branch against master/main' })
 vim.keymap.set('n', '<leader>ds', '<cmd>Difft --staged<CR>', { desc = 'Difftastic: diff staged changes' })
 vim.keymap.set('n', '<leader>dc', '<cmd>DifftClose<CR>', { desc = 'Difftastic: close diff' })
 
 require('yazi').setup({
-  open_for_directories = true,
-  floating_window_scaling_factor = 1.0,
-  yazi_floating_window_border = 'none',
-  keymaps = {
-    show_help = '<c-_>',
-  },
+	open_for_directories = true,
+	floating_window_scaling_factor = 1.0,
+	yazi_floating_window_border = 'none',
+	keymaps = {
+		show_help = '<c-_>',
+	},
 })
 
 vim.keymap.set('n', '<leader>e', '<cmd>Yazi<CR>', { desc = 'Open Yazi' })
@@ -304,4 +371,13 @@ vim.keymap.set('n', '<leader>r', '<cmd>edit!<CR>', { desc = 'Reload file from di
 
 vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
 vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
+vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })
 
+local kulala = require('kulala')
+vim.keymap.set('n', '<leader>Rs', kulala.run, { desc = 'Kulala: send request' })
+vim.keymap.set('n', '<leader>Ra', kulala.run_all, { desc = 'Kulala: send all requests' })
+vim.keymap.set('n', '<leader>Rr', kulala.replay, { desc = 'Kulala: replay last request' })
+vim.keymap.set('n', '<leader>Rt', kulala.toggle_view, { desc = 'Kulala: toggle headers/body view' })
+vim.keymap.set('n', '<leader>Rn', kulala.jump_next, { desc = 'Kulala: next request' })
+vim.keymap.set('n', '<leader>Rp', kulala.jump_prev, { desc = 'Kulala: previous request' })
+vim.keymap.set('n', '<leader>Rc', kulala.close, { desc = 'Kulala: close response window' })
