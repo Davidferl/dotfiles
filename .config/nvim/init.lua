@@ -36,61 +36,12 @@ vim.pack.add({
 	'https://github.com/ThorstenRhau/token',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/mistweaverco/kulala.nvim',
+	'https://github.com/ClearAspect/onehalf',
+	'https://github.com/savq/melange-nvim',
 })
 
 vim.o.background = 'light'
-
--- Boost contrast of token's light palette against the cream background. token is a
--- no-config theme, but it recomputes every highlight from `token.palette` on load.
--- Intercepting that module via package.preload (which survives the package.loaded
--- wipe in token's loader) lets us deepen the hues in one place, so syntax, LSP
--- semantic tokens, and plugin groups all gain contrast. Dark variant is untouched.
--- NOTE: applies on the dynamic load path only — don't run :TokenCompile, as its
--- bytecode cache bypasses this hook.
-local token_palette = require('token.palette')
-package.preload['token.palette'] = function()
-	return function(background)
-		local p = token_palette(background)
-		if background == 'light' then
-			p.accent = '#aa3f14' -- functions, titles
-			p.accent2 = '#855212' -- keywords, booleans
-			p.blue = '#2b6595'
-			p.green = '#266a34'
-			p.red = '#b43535'
-			p.yellow = '#7a6800'
-			p.purple = '#7c43a5'
-			p.cyan = '#166f6f'
-			p.orange = '#a14c0a'
-			p.olive = '#546d19'
-			p.fg2 = '#585450' -- comments, muted text
-			p.fg3 = '#6b675f' -- most-muted foreground
-			p.line_nr = '#9a968e'
-		end
-		return p
-	end
-end
-
-vim.cmd.colorscheme('token')
-
--- Soften the diff colors; difftastic and other plugins inherit from these semantic groups
-vim.api.nvim_set_hl(0, 'Added', { fg = '#8cb285' })
-vim.api.nvim_set_hl(0, 'Removed', { fg = '#d29494' })
-
--- Bold the keyword family for emphasis (token leaves core syntax at regular weight).
--- Re-set each group with its own colors plus bold; linked subgroups (@keyword,
--- @keyword.conditional, @keyword.import, ...) inherit the bold automatically.
-local function bold_group(group)
-	local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
-	hl.bold = true
-	vim.api.nvim_set_hl(0, group, hl)
-end
-for _, g in ipairs({
-	'Keyword', 'Statement', 'Conditional', 'Repeat', 'Exception', 'Include', 'Define',
-	'@keyword.coroutine', '@keyword.function', '@keyword.operator', '@keyword.type',
-	'@keyword.return', '@keyword.modifier', '@keyword.debug',
-}) do
-	bold_group(g)
-end
+vim.cmd.colorscheme('onehalflight')
 
 -- LSP
 
