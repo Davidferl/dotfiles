@@ -31,6 +31,7 @@ infisical = "latest"
 herdr = "latest"
 starship = "latest"
 eza = "latest"
+"github:earendil-works/pi" = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

@@ -1,3 +1,16 @@
+gui:
+  theme:
+    lightTheme: true
+    activeBorderColor:
+      - black
+      - bold
+    inactiveBorderColor:
+      - black
+    selectedLineBgColor:
+      - "#dddcd6"
+    inactiveViewSelectedLineBgColor:
+      - "#f0efeb"
+
 git:
   diffRenderers:
     - command: difft --color=always --display=inline --syntax-highlight=on

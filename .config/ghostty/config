@@ -53,7 +53,7 @@ macos-option-as-alt = true
 
 font-family = "Monaspace Argon NF Regular"
 
-theme = Atom One Light
+theme = One Half Light
 
 window-decoration = none
 cursor-style = block
