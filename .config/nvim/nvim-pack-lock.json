@@ -12,10 +12,6 @@
       "rev": "944ef13cc8d8fe8b846c91f36041c8dfb85ca000",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
-    "kulala.nvim": {
-      "rev": "2fc8ab5dd15b55b38ed3421689d63cce9fa8a897",
-      "src": "https://github.com/mistweaverco/kulala.nvim"
-    },
     "lazygit.nvim": {
       "rev": "a04ad0dbc725134edbee3a5eea29290976695357",
       "src": "https://github.com/kdheepak/lazygit.nvim"
