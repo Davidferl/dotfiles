@@ -4,6 +4,10 @@
       "rev": "c573a15a62bd0bfd4006ee0849b24f5404395500",
       "src": "https://github.com/Saghen/blink.cmp"
     },
+    "blink.lib": {
+      "rev": "c8fdc12c8a2fab6cf786dd7141a283f8079f902b",
+      "src": "https://github.com/saghen/blink.lib"
+    },
     "difftastic.nvim": {
       "rev": "6041ef0244b3fecf3b7f07de9af8cfbf8dbc4945",
       "src": "https://github.com/clabby/difftastic.nvim"

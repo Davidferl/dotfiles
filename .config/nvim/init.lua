@@ -32,7 +32,8 @@ vim.pack.add({
 	'https://github.com/MeanderingProgrammer/render-markdown.nvim',
 	'https://github.com/karb94/neoscroll.nvim',
 	'https://github.com/nvim-lualine/lualine.nvim',
-	'https://github.com/Saghen/blink.cmp',
+	'https://github.com/saghen/blink.cmp',
+	'https://github.com/saghen/blink.lib',
 	'https://github.com/ThorstenRhau/token',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/mistweaverco/kulala.nvim',
@@ -258,7 +259,8 @@ require('lualine').setup({
 
 -- Completion
 
-require('blink.cmp').setup({
+local cmp = require('blink.cmp')
+cmp.setup({
 	keymap = {
 		preset = 'default',
 		['<CR>'] = { 'accept', 'fallback' },
@@ -269,6 +271,7 @@ require('blink.cmp').setup({
 	sources = {
 		default = { 'lsp', 'path', 'buffer' },
 	},
+	fuzzy = { implementation = "lua" }
 })
 
 -- Telescope
