@@ -32,6 +32,8 @@ herdr = "latest"
 starship = "latest"
 eza = "latest"
 "github:earendil-works/pi" = "latest"
+rg = "latest"
+fd = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
