@@ -135,12 +135,11 @@ key = "prefix+shift+c"
 type = "pane"
 command = "fish -c hwtc"
 
-# Legacy indexed shortcut config is still parsed for compatibility.
-# Prefer switch_tab, switch_workspace, and focus_agent for new configs.
-# [keys.indexed]
-# tabs = ""       # e.g. "ctrl" makes ctrl+1..9 switch tabs directly
-# workspaces = "" # e.g. "ctrl+shift" makes ctrl+shift+1..9 switch workspaces directly
-# agents = ""     # e.g. "alt" makes alt+1..9 focus agent rows directly
+[[keys.command]]
+key = "cmd+r"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"
+
 
 # [worktrees]
 # directory = "~/.herdr/worktrees"
