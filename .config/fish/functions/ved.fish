@@ -1,3 +1,0 @@
-function ved
-    deactivate
-end
