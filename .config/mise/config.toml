@@ -23,7 +23,6 @@ opencode = "latest"
 yazi = "latest"
 "npm:oxfmt" = "latest"
 "npm:@prisma/language-server" = "latest"
-"npm:tree-sitter-cli" = "latest"
 difftastic = "latest"
 caddy = "latest"
 infisical = "latest"
@@ -32,6 +31,8 @@ herdr = "latest"
 starship = "latest"
 eza = "latest"
 "github:earendil-works/pi" = "latest"
+rg = "latest"
+fd = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node"]

@@ -27,25 +27,35 @@ vim.pack.add({
 	'https://github.com/lewis6991/gitsigns.nvim',
 	'https://github.com/rrethy/vim-illuminate',
 	'https://github.com/MunifTanjim/nui.nvim',
-	'https://github.com/clabby/difftastic.nvim',
 	'https://github.com/mikavilpas/yazi.nvim',
 	'https://github.com/MeanderingProgrammer/render-markdown.nvim',
 	'https://github.com/karb94/neoscroll.nvim',
 	'https://github.com/nvim-lualine/lualine.nvim',
-	'https://github.com/Saghen/blink.cmp',
-	'https://github.com/ThorstenRhau/token',
+	'https://github.com/saghen/blink.cmp',
+	'https://github.com/saghen/blink.lib',
 	'https://github.com/folke/which-key.nvim',
-	'https://github.com/mistweaverco/kulala.nvim',
 	'https://github.com/ClearAspect/onehalf',
-	'https://github.com/savq/melange-nvim',
+	'https://github.com/mistweaverco/kulala.nvim',
 })
 
 vim.o.background = 'light'
 vim.cmd.colorscheme('onehalflight')
 
--- LSP
+-- Hightlight on yank
+vim.api.nvim_create_autocmd('TextYankPost', {
+	group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
+	callback = function()
+		vim.highlight.on_yank({ timeout = 150 })
+	end,
+})
 
+
+-- LSP
 vim.lsp.enable('lua_ls')
+vim.lsp.enable('prismals')
+vim.lsp.enable('oxfmt')
+vim.lsp.enable('oxlint')
+vim.lsp.enable('tilt_ls')
 
 -- ts_ls needs a `typescript` install to start; without one it exits before attaching.
 -- Point it at whatever tsserver is on PATH (e.g. the global mise typescript) so it works
@@ -60,10 +70,7 @@ if tsserver ~= '' then
 	})
 end
 vim.lsp.enable('ts_ls')
-vim.lsp.enable('prismals')
-vim.lsp.enable('oxfmt')
-vim.lsp.enable('oxlint')
-vim.lsp.enable('tilt_ls')
+
 -- Launch sourcekit-lsp through `xcrun` so it resolves to the active Xcode toolchain
 -- (which has the iOS SDK). The bare `sourcekit-lsp` on PATH is swiftly's standalone
 -- toolchain, which lacks the iOS SDK and fails with "Setting up ASTContext failed".
@@ -163,13 +170,6 @@ require('gitsigns').setup {
 	end
 }
 
--- Diff
-
-require('difftastic-nvim').setup({
-	vcs = 'git',
-	download = false,
-})
-
 -- Markdown
 
 require('render-markdown').setup({})
@@ -186,7 +186,7 @@ require('neoscroll').setup({})
 
 require('lualine').setup({
 	options = {
-		theme = 'token',
+		theme = 'onehalflight',
 		globalstatus = true,
 		component_separators = { left = '', right = '' },
 		section_separators = { left = '', right = '' },
@@ -209,7 +209,8 @@ require('lualine').setup({
 
 -- Completion
 
-require('blink.cmp').setup({
+local cmp = require('blink.cmp')
+cmp.setup({
 	keymap = {
 		preset = 'default',
 		['<CR>'] = { 'accept', 'fallback' },
@@ -220,6 +221,7 @@ require('blink.cmp').setup({
 	sources = {
 		default = { 'lsp', 'path', 'buffer' },
 	},
+	fuzzy = { implementation = "lua" }
 })
 
 -- Telescope
@@ -270,7 +272,6 @@ local wk = require('which-key')
 wk.setup({})
 wk.add({
 	{ '<leader>h', group = 'Git hunks' },
-	{ '<leader>d', group = 'Diff / diagnostics' },
 	{ '<leader>R', group = 'REST (kulala)' },
 })
 
@@ -293,17 +294,6 @@ vim.keymap.set('n', '<leader>t', telescope.live_grep, { desc = 'Telescope live g
 vim.keymap.set('n', '<leader>b', telescope.buffers, { desc = 'Telescope buffers' })
 
 vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit' })
-
-vim.keymap.set('n', '<leader>dd', function()
-	-- Prefer master, fall back to main if master doesn't exist
-	local function branch_exists(ref)
-		return vim.fn.system({ 'git', 'rev-parse', '--verify', '--quiet', ref }) ~= ''
-	end
-	local base = branch_exists('origin/master') and 'origin/master' or 'origin/main'
-	vim.cmd('Difft ' .. base .. '...HEAD')
-end, { desc = 'Difftastic: diff branch against master/main' })
-vim.keymap.set('n', '<leader>ds', '<cmd>Difft --staged<CR>', { desc = 'Difftastic: diff staged changes' })
-vim.keymap.set('n', '<leader>dc', '<cmd>DifftClose<CR>', { desc = 'Difftastic: close diff' })
 
 require('yazi').setup({
 	open_for_directories = true,
