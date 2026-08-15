@@ -136,7 +136,7 @@ type = "pane"
 command = "fish -c hwtc"
 
 [[keys.command]]
-key = "cmd+r"
+key = "prefix+shift+r"
 type = "plugin_action"
 command = "persiyanov.reviewr.toggle"
 
