@@ -35,7 +35,6 @@ vim.pack.add({
 	'https://github.com/saghen/blink.lib',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/ClearAspect/onehalf',
-	'https://github.com/mistweaverco/kulala.nvim',
 })
 
 vim.o.background = 'light'
@@ -174,10 +173,6 @@ require('gitsigns').setup {
 
 require('render-markdown').setup({})
 
--- REST client (kulala)
-
-require('kulala').setup({})
-
 -- Scrolling
 
 require('neoscroll').setup({})
@@ -272,7 +267,6 @@ local wk = require('which-key')
 wk.setup({})
 wk.add({
 	{ '<leader>h', group = 'Git hunks' },
-	{ '<leader>R', group = 'REST (kulala)' },
 })
 
 -- Keymaps
@@ -312,12 +306,3 @@ vim.keymap.set('n', '<leader>r', '<cmd>edit!<CR>', { desc = 'Reload file from di
 vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
 vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
 vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })
-
-local kulala = require('kulala')
-vim.keymap.set('n', '<leader>Rs', kulala.run, { desc = 'Kulala: send request' })
-vim.keymap.set('n', '<leader>Ra', kulala.run_all, { desc = 'Kulala: send all requests' })
-vim.keymap.set('n', '<leader>Rr', kulala.replay, { desc = 'Kulala: replay last request' })
-vim.keymap.set('n', '<leader>Rt', kulala.toggle_view, { desc = 'Kulala: toggle headers/body view' })
-vim.keymap.set('n', '<leader>Rn', kulala.jump_next, { desc = 'Kulala: next request' })
-vim.keymap.set('n', '<leader>Rp', kulala.jump_prev, { desc = 'Kulala: previous request' })
-vim.keymap.set('n', '<leader>Rc', kulala.close, { desc = 'Kulala: close response window' })
