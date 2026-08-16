@@ -35,7 +35,8 @@ vim.pack.add({
 	'https://github.com/saghen/blink.lib',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/ClearAspect/onehalf',
-	'https://github.com/rachartier/tiny-inline-diagnostic.nvim'
+	'https://github.com/rachartier/tiny-inline-diagnostic.nvim',
+	'https://github.com/LintaoAmons/scratch.nvim'
 })
 
 vim.o.background = 'light'
@@ -49,6 +50,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 })
 
+
+-- Scratch
+require('scratch').setup({
+	filetypes = { "lua", "sh", "ts" }
+})
 
 -- Diagnostics
 
@@ -117,19 +123,14 @@ vim.lsp.config("rust_analyzer", {
 
 vim.lsp.enable("rust_analyzer")
 
--- ts_ls needs a `typescript` install to start; without one it exits before attaching.
--- Point it at whatever tsserver is on PATH (e.g. the global mise typescript) so it works
--- even before a project's deps are installed. Derive the lib dir from the binary:
--- <prefix>/typescript/bin/tsserver  ->  <prefix>/typescript/lib
-local tsserver = vim.fn.exepath('tsserver')
-if tsserver ~= '' then
-	local real = vim.uv.fs_realpath(tsserver) or tsserver
-	local lib = vim.fs.joinpath(vim.fs.dirname(vim.fs.dirname(real)), 'lib')
-	vim.lsp.config('ts_ls', {
-		init_options = { tsserver = { path = lib } },
-	})
-end
-vim.lsp.enable('ts_ls')
+-- Typescript 7
+vim.lsp.config('ts7', {
+	cmd = { 'tsc', '--lsp', '--stdio' },
+	filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+	root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
+})
+
+vim.lsp.enable('ts7')
 
 -- Launch sourcekit-lsp through `xcrun` so it resolves to the active Xcode toolchain (which has the iOS SDK).
 vim.lsp.config('sourcekit', {

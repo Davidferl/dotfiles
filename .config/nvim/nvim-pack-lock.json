@@ -48,6 +48,10 @@
       "rev": "5adf0895310c1904e5abfaad40a2baad7fe44a07",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
+    "scratch.nvim": {
+      "rev": "01e4fa9347941f5fe6bd0ec2581ffc12d3234d66",
+      "src": "https://github.com/LintaoAmons/scratch.nvim"
+    },
     "telescope-ui-select.nvim": {
       "rev": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2",
       "src": "https://github.com/nvim-telescope/telescope-ui-select.nvim"
