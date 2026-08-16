@@ -35,6 +35,7 @@ vim.pack.add({
 	'https://github.com/saghen/blink.lib',
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/ClearAspect/onehalf',
+	'https://github.com/rachartier/tiny-inline-diagnostic.nvim'
 })
 
 vim.o.background = 'light'
@@ -49,12 +50,72 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 
+-- Diagnostics
+
+require('tiny-inline-diagnostic').setup({
+	preset = "powerline",
+	options = {
+		multilines = true,
+		show_code = false
+	}
+})
+
+vim.diagnostic.config({
+	virtual_lines = false,
+	virtual_text = false,
+	severity_sort = true,
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = '✘',
+			[vim.diagnostic.severity.WARN]  = '⚠',
+			[vim.diagnostic.severity.INFO]  = 'ⓘ',
+			[vim.diagnostic.severity.HINT]  = '➤',
+		},
+	},
+})
+
+
 -- LSP
+
+vim.lsp.config('*', {
+	capabilities = require('blink.cmp').get_lsp_capabilities(),
+})
+
+vim.lsp.config('lua_ls', {
+	settings = {
+		Lua = {
+			runtime = {
+				version = 'LuaJIT',
+			},
+			diagnostics = {
+				globals = { 'vim' },
+			},
+			workspace = {
+				checkThirdParty = false,
+				library = vim.api.nvim_get_runtime_file('', true),
+			},
+			telemetry = {
+				enable = false,
+			},
+		},
+	},
+})
 vim.lsp.enable('lua_ls')
+
 vim.lsp.enable('prismals')
 vim.lsp.enable('oxfmt')
 vim.lsp.enable('oxlint')
 vim.lsp.enable('tilt_ls')
+
+-- Rust
+
+vim.lsp.config("rust_analyzer", {
+	cmd = {
+		vim.fn.expand("~/.local/share/mise/installs/rust-analyzer/latest/rust-analyzer"),
+	},
+})
+
+vim.lsp.enable("rust_analyzer")
 
 -- ts_ls needs a `typescript` install to start; without one it exits before attaching.
 -- Point it at whatever tsserver is on PATH (e.g. the global mise typescript) so it works
@@ -70,9 +131,7 @@ if tsserver ~= '' then
 end
 vim.lsp.enable('ts_ls')
 
--- Launch sourcekit-lsp through `xcrun` so it resolves to the active Xcode toolchain
--- (which has the iOS SDK). The bare `sourcekit-lsp` on PATH is swiftly's standalone
--- toolchain, which lacks the iOS SDK and fails with "Setting up ASTContext failed".
+-- Launch sourcekit-lsp through `xcrun` so it resolves to the active Xcode toolchain (which has the iOS SDK).
 vim.lsp.config('sourcekit', {
 	cmd = { 'xcrun', 'sourcekit-lsp' },
 })
@@ -257,9 +316,6 @@ require('telescope').load_extension('ui-select')
 -- Make the matched line in the grep preview clearly visible
 vim.api.nvim_set_hl(0, 'TelescopePreviewLine', { bg = '#fff3a3', bold = true })
 
--- Diagnostics
-
-vim.diagnostic.config({ underline = true, virtual_text = true, signs = true, severity_sort = true })
 
 -- Which-key
 
@@ -304,5 +360,7 @@ vim.keymap.set('n', '<leader>cw', '<cmd>Yazi cwd<CR>', { desc = 'Open Yazi in cw
 vim.keymap.set('n', '<leader>r', '<cmd>edit!<CR>', { desc = 'Reload file from disk (:e!)' })
 
 vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostics list' })
+
 vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
 vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })

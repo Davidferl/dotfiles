@@ -1,3 +1,8 @@
 theme = "one-light"
 toggle_placement = "tab"
 navigator_position = "left"
+
+[keybindings]
+# expand = ["l"]
+# collapse = ["h"]
+# comments = ["L"]
