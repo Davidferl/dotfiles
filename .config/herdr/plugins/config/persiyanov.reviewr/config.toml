@@ -3,6 +3,6 @@ toggle_placement = "tab"
 navigator_position = "left"
 
 [keybindings]
-# expand = ["l"]
-# collapse = ["h"]
-# comments = ["L"]
+expand = ["l"]
+collapse = ["h"]
+comments = ["L"]

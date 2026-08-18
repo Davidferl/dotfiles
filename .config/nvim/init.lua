@@ -21,8 +21,6 @@ vim.pack.add({
 	'https://github.com/nvim-lua/plenary.nvim',
 	'https://github.com/nvim-treesitter/nvim-treesitter',
 	'https://github.com/neovim/nvim-lspconfig',
-	'https://github.com/nvim-telescope/telescope.nvim',
-	'https://github.com/nvim-telescope/telescope-ui-select.nvim',
 	'https://github.com/kdheepak/lazygit.nvim',
 	'https://github.com/lewis6991/gitsigns.nvim',
 	'https://github.com/rrethy/vim-illuminate',
@@ -36,7 +34,9 @@ vim.pack.add({
 	'https://github.com/folke/which-key.nvim',
 	'https://github.com/ClearAspect/onehalf',
 	'https://github.com/rachartier/tiny-inline-diagnostic.nvim',
-	'https://github.com/LintaoAmons/scratch.nvim'
+	'https://github.com/LintaoAmons/scratch.nvim',
+	'https://github.com/mason-org/mason.nvim',
+	'https://github.com/ibhagwan/fzf-lua',
 })
 
 vim.o.background = 'light'
@@ -80,8 +80,12 @@ vim.diagnostic.config({
 	},
 })
 
+vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostics list' })
 
 -- LSP
+
+require('mason').setup()
 
 vim.lsp.config('*', {
 	capabilities = require('blink.cmp').get_lsp_capabilities(),
@@ -107,21 +111,12 @@ vim.lsp.config('lua_ls', {
 	},
 })
 vim.lsp.enable('lua_ls')
-
 vim.lsp.enable('prismals')
 vim.lsp.enable('oxfmt')
 vim.lsp.enable('oxlint')
 vim.lsp.enable('tilt_ls')
-
--- Rust
-
-vim.lsp.config("rust_analyzer", {
-	cmd = {
-		vim.fn.expand("~/.local/share/mise/installs/rust-analyzer/latest/rust-analyzer"),
-	},
-})
-
-vim.lsp.enable("rust_analyzer")
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('taplo')
 
 -- Typescript 7
 vim.lsp.config('ts7', {
@@ -161,6 +156,9 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 		})
 	end,
 })
+
+vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
+vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })
 
 -- Git
 
@@ -229,6 +227,8 @@ require('gitsigns').setup {
 	end
 }
 
+vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit' })
+
 -- Markdown
 
 require('render-markdown').setup({})
@@ -249,16 +249,10 @@ require('lualine').setup({
 	sections = {
 		lualine_a = { 'mode' },
 		lualine_b = { 'branch', 'diff', 'diagnostics' },
-		lualine_c = {},
+		lualine_c = { 'filename' },
 		lualine_x = { 'filetype' },
 		lualine_y = { 'progress' },
 		lualine_z = { 'location' },
-	},
-	winbar = {
-		lualine_c = { { 'filename', path = 1 } },
-	},
-	inactive_winbar = {
-		lualine_c = { { 'filename', path = 1 } },
 	},
 })
 
@@ -279,43 +273,21 @@ cmp.setup({
 	fuzzy = { implementation = "lua" }
 })
 
--- Telescope
+-- Search
 
-require('telescope').setup({
-	defaults = {
-		sorting_strategy = 'ascending',
-		layout_config = {
-			prompt_position = 'top',
-		},
-	},
-	pickers = {
-		find_files = {
-			hidden = true,
-			file_ignore_patterns = { '^%.git/' },
-		},
-		live_grep = {
-			previewer = false,
-			additional_args = function() return { '--hidden', '--glob', '!**/.git/*' } end,
-		},
-		buffers = {
-			previewer = false,
-		},
-		lsp_dynamic_workspace_symbols = {
-			symbols = { 'method', 'variable' },
-			fname_width = 60,
-			symbol_width = 30,
-		},
-	},
-	extensions = {
-		['ui-select'] = {
-			require('telescope.themes').get_dropdown({}),
-		},
-	},
-})
-require('telescope').load_extension('ui-select')
+require('fzf-lua').setup({})
+vim.keymap.set('n', '<leader>f', FzfLua.files, { desc = 'Fzf find files' })
+vim.keymap.set('n', '<leader>s', FzfLua.lsp_live_workspace_symbols, { desc = 'Fzf search symbols' })
 
--- Make the matched line in the grep preview clearly visible
-vim.api.nvim_set_hl(0, 'TelescopePreviewLine', { bg = '#fff3a3', bold = true })
+vim.keymap.set('n', '<leader>t', function()
+	FzfLua.live_grep({
+		cwd = vim.fs.root(0, { '.git' }) or vim.fn.getcwd(),
+		hidden = true,
+	})
+end, { desc = 'Fzf live grep' })
+
+vim.keymap.set('n', '<leader>z', FzfLua.zoxide, { desc = 'Fzf search directories' })
+
 
 
 -- Which-key
@@ -326,26 +298,8 @@ wk.add({
 	{ '<leader>h', group = 'Git hunks' },
 })
 
--- Keymaps
 
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
-vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
-
-vim.keymap.set('n', '<leader>o', '<cmd>only<CR>', { desc = 'Close all other splits' })
-
-local telescope = require('telescope.builtin')
-vim.keymap.set('n', '<leader>f', telescope.find_files, { desc = 'Telescope find files' })
-vim.keymap.set('n', '<leader>s', telescope.lsp_dynamic_workspace_symbols,
-	{ desc = 'Telescope workspace symbols (methods/variables)' })
-vim.keymap.set('n', '<leader>t', telescope.live_grep, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>b', telescope.buffers, { desc = 'Telescope buffers' })
-
-vim.keymap.set('n', '<leader>g', vim.cmd.LazyGit, { desc = 'Open Lazygit' })
-
+-- Yazi
 require('yazi').setup({
 	open_for_directories = true,
 	floating_window_scaling_factor = 1.0,
@@ -358,10 +312,13 @@ require('yazi').setup({
 vim.keymap.set('n', '<leader>e', '<cmd>Yazi<CR>', { desc = 'Open Yazi' })
 vim.keymap.set('n', '<leader>cw', '<cmd>Yazi cwd<CR>', { desc = 'Open Yazi in cwd' })
 
+-- Keymaps
+
+vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>r', '<cmd>edit!<CR>', { desc = 'Reload file from disk (:e!)' })
-
-vim.keymap.set('n', 'Q', vim.diagnostic.open_float, { desc = 'Line diagnostics (float)' })
-vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostics list' })
-
-vim.keymap.set({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, { desc = 'Code actions' })
-vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })
+vim.keymap.set('n', '<leader>o', '<cmd>only<CR>', { desc = 'Close all other splits' })

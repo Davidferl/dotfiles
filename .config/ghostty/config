@@ -51,7 +51,7 @@ keybind = super+enter=unbind
 # macOS-only; a known config key on all platforms, ignored off macOS.
 macos-option-as-alt = true
 
-font-family = "Monaspace Argon NF Regular"
+font-family = "Monaspace Neon NF"
 
 theme = One Half Light
 
